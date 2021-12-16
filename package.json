@@ -1,0 +1,26 @@
+{
+  "name": "almond-launcher",
+  "version": "1.0.0",
+  "description": "Almond Game Launcher",
+  "main": "./js/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thijnmens/Almond-launcher.git"
+  },
+  "keywords": [
+    "Game",
+    "launcher"
+  ],
+  "author": "Thijnmens",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/thijnmens/Almond-launcher/issues"
+  },
+  "homepage": "https://github.com/thijnmens/Almond-launcher#readme",
+  "devDependencies": {
+    "electron": "^16.0.4"
+  }
+}
