@@ -1,13 +1,11 @@
-import logo from './logo.svg';
 import './App.css';
 import './index.css';
+import Navbar from './Components/Navbar';
 
 function App() {
   return (
-    <div className='flex select-none'>
-      <h1>1</h1>
-      <h1>1</h1>
-      <h1>1</h1>
+    <div className='flex'>
+      <Navbar />
     </div>
   );
 }
