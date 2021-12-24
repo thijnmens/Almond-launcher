@@ -36,3 +36,20 @@ You don't have to ever use `eject`. The curated feature set is suitable for smal
 
 ## Licence
 
+This project is licensed under a [Attribution-NonCommercial-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+## Issues
+
+Please report issues through [Github Issues](https://github.com/thijnmens/Almond-launcher/issues/new).
+
+## Contributing
+
+Contributions are always welcome as we are always looking for new ways to improve our platform.
+
+### How do i contribute?
+
+Simply create a [Pull Request](https://github.com/thijnmens/Almond-launcher/compare) on Github and we'll evaluate it as soon as possible.
+
+## Donating
+
+[PayPal](https://www.paypal.com/donate/?hosted_button_id=T4RMGM6JT7GJ6).
