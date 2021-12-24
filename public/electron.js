@@ -3,6 +3,8 @@ const {app, BrowserWindow} = require('electron');
 
 function createWindow() {
 	const mainWindow = new BrowserWindow({
+		title: 'Almond Launcher',
+		icon: './favicon.ico',
 		width: 800,
 		height: 600,
 		webPreferences: {
