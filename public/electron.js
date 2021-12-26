@@ -1,5 +1,7 @@
 const path = require('path');
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
+const { exec } = require('child_process');
+//import raw from 'C:/Program Files (x86)/Steam/steamapps/libraryfolders.vdf'
 
 function createWindow() {
 	const mainWindow = new BrowserWindow({
@@ -13,8 +15,17 @@ function createWindow() {
 	})
 	if (app.isPackaged) {
 		mainWindow.loadFile(path.join(__dirname, "../build/index.html"));
+		exec("sudo Not Yet Implemented")
 	} else {
 		mainWindow.loadURL("http://localhost:3000");
+		exec(`python ${path.join(__dirname, "../server/index.py")}`, (error, stdout, stderr) => {
+			if (error) {
+				console.error(`exec error: ${error}`);
+				return;
+			}
+				console.log(`stdout: ${stdout}`);
+				console.error(`stderr: ${stderr}`);
+		});
 	}
 };
 
