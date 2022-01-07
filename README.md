@@ -1,5 +1,9 @@
 # Getting Started with Almond Launcher
 
+## How to build?
+
+surprisingly easy actually! We included build files in the project root, just run the script for the OS you need the app build for and you're basically done!
+
 ## Available Scripts
 
 In the project directory, you can run:

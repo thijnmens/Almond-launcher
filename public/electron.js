@@ -1,7 +1,8 @@
 const path = require('path');
 const {app, BrowserWindow, ipcMain} = require('electron');
-const { exec } = require('child_process');
-//import raw from 'C:/Program Files (x86)/Steam/steamapps/libraryfolders.vdf'
+const { PythonShell } = require('python-shell');
+
+var backend;
 
 function createWindow() {
 	const mainWindow = new BrowserWindow({
@@ -15,23 +16,24 @@ function createWindow() {
 	})
 	if (app.isPackaged) {
 		mainWindow.loadFile(path.join(__dirname, "../build/index.html"));
-		exec("sudo Not Yet Implemented")
 	} else {
 		mainWindow.loadURL("http://localhost:3000");
-		exec(`python ${path.join(__dirname, "../server/index.py")}`, (error, stdout, stderr) => {
-			if (error) {
-				console.error(`exec error: ${error}`);
-				return;
-			}
-				console.log(`stdout: ${stdout}`);
-				console.error(`stderr: ${stderr}`);
-		});
 	}
+	backend = PythonShell.run(`${path.join(__dirname, "./server/index.py")}`, {
+		mode: 'text',
+		pythonPath: 'python',
+		pythonOptions: ['-u'],
+		args: ['arg1', 'arg2']
+	}, function(err, results) {
+		if (err) console.error(err);
+		console.log('results: %j', results);
+	});
 };
 
 app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {
+	// Some shit that kills the backend
 	if (process.platform !== 'darwin') {
 		app.quit();
 	}

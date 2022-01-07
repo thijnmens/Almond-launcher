@@ -1,10 +1,19 @@
 {
-  "plugins": ["@babel/syntax-dynamic-import"],
+  "plugins": ["@babel/syntax-dynamic-import", "babel-plugin-tailwind"],
   "presets": [
     [
       "@babel/preset-env",
       {
         "modules": false
+      }
+    ],
+    [
+      "@babel/preset-react",
+      {
+        "pragma": "dom",
+        "pragmaFrag": "DomFrag",
+        "throwIfNamespace": false,
+        "runtime": "classic"
       }
     ]
   ]

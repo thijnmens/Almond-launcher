@@ -4,13 +4,17 @@
 
 @layer components {
 
+	html {
+		@apply bg-gray-800
+	}
+
 	.navbar-icon {
 		@apply relative flex items-center justify-center h-12 w-12 mt-2 mb-2 mx-auto shadow-lg bg-gray-800 text-blue-500 rounded-3xl transition-all duration-300 ease-linear cursor-pointer;
-		@apply hover:text-white hover:bg-blue-600 hover:rounded-xl;
+		@apply hover:text-white hover:bg-blue-600 hover:rounded-xl hover:scale-[1.15];
 	}
 
 	.navbar-tooltip {
-		@apply absolute w-auto p-2 m-2 min-w-max left-14 rounded-md shadow-md text-white bg-gray-900 text-xs font-bold transition-all duration-100 scale-0 origin-left;
+		@apply absolute w-auto p-2 m-2 min-w-max left-16 rounded-md shadow-md text-white bg-gray-900 text-xs font-bold transition-all duration-100 scale-0 origin-left;
 	}
 
 	.spacer {
@@ -28,4 +32,41 @@
 		scrollbar-width: none;
 	}
 
+	.banner-container {
+		@apply relative hover:scale-[1.1] hover:z-40 transition duration-500
+	}
+
+	.hover-banner {
+		overflow: hidden;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-o-user-select: none;
+		user-select: none;
+		position: absolute; 
+		bottom: 0; 
+		background: rgb(0, 0, 0);
+		background: rgba(0, 0, 0, 0.7);
+		color: #f1f1f1; 
+		width: 100%;
+		transition: .5s ease;
+		opacity:0;
+		color: white;
+		font-size: 20px;
+		padding: 10%;
+		text-align: center;
+		border-radius: 0 0 0.75rem 0.75rem;
+	}
+
+	.banner-container:hover .hover-banner {
+		opacity: 1;
+	}
+
+	.contextmenu-button {
+		@apply flex-[1] justify-center items-center bg-gray-800 hover:bg-gray-900 text-gray-200 font-bold cursor-pointer z-50 align-middle
+	}
+
+	.contextmenu-icon {
+		@apply h-12 w-12 float-left
+	}
 }
