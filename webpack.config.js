@@ -6,6 +6,8 @@ const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV == "production";
 
+const stylesHandler = 'style-loader';
+
 const config = {
   resolve: {
     extensions: [".js",".jsx",".ts",".tsx"],
@@ -30,6 +32,10 @@ const config = {
   module: {
     rules: [
       {
+        test: /\.(css)$/i,
+        use: [stylesHandler, 'css-loader', 'postcss-loader'],
+      },
+      {
         test: /\.(js|jsx)$/i,
         loader: "babel-loader",
       },
@@ -40,10 +46,18 @@ const config = {
       {
         test: /\.(vdf|acf)$/i,
         loader: "raw-loader"
-      }
-
-      // Add your rules for custom modules here
-      // Learn more about loaders from https://webpack.js.org/loaders/
+      },
+      {
+        test: /\.(png|jp(e*)g|svg|gif)$/,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: 'images/[hash]-[name].[ext]',
+            },
+          },
+        ],
+      },
     ],
   },
 };
