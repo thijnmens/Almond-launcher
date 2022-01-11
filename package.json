@@ -13,19 +13,25 @@
     "@testing-library/user-event": "^13.5.0",
     "@webpack-cli/generators": "^2.4.1",
     "autoprefixer": "9",
+    "body-parser": "^1.19.1",
+    "cheerio": "^1.0.0-rc.10",
     "child_process": "^1.0.2",
     "concurrently": "^6.5.1",
+    "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "jquery": "^3.6.0",
+    "node-fetch": "2",
     "path-browserify": "^1.0.1",
     "postcss": "^8",
     "postcss-loader": "^6.2.1",
     "python-shell": "^3.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-dropdown": "^1.9.2",
     "react-icons": "^4.3.1",
     "react-popper": "^2.2.5",
     "react-popperjs": "^0.0.3",
+    "react-portal": "^4.2.1",
     "react-scripts": "5.0.0",
     "react-tooltip": "^4.2.21",
     "style-loader": "^3.3.1",
@@ -72,6 +78,7 @@
     "electron": "^16.0.5",
     "electron-builder": "^22.14.5",
     "electron-packager": "^15.4.0",
+    "express": "^4.17.2",
     "fs": "^0.0.1-security",
     "html-webpack-plugin": "^5.5.0",
     "postcss-flexbugs-fixes": "^5.0.2",
@@ -82,12 +89,24 @@
     "webpack-cli": "^4.9.1",
     "workbox-webpack-plugin": "^6.4.2"
   },
-  "description": "A all-in-one game launcher",
+  "description": "An all-in-one game launcher",
   "build": {
     "appId": "666",
     "win": {
       "target": "nsis",
-      "icon": "build/icon.ico"
-    }
+      "icon": "public/icon.ico"
+    },
+    "files": [
+      "**/*"
+    ],
+    "extraFiles": [
+      {
+        "from": "src/Assets",
+        "to": "Assets",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
   }
 }

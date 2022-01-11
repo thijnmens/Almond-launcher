@@ -1,6 +1,12 @@
 import { FaFire, FaGithub, FaArchive } from 'react-icons/fa';
+import React from 'react';
 
 const Navbar = (props) => {
+
+
+	function _onSelect() {
+		props.getOnClick()
+	};
 
 	const NavbarIcon = ({ icon, text }) => (
 	<div className='navbar-icon group static'>
@@ -18,7 +24,7 @@ const Navbar = (props) => {
 	return (
 		<div className="top-0 bottom-0 left-0 h-screen w-16 m-0 flex flex-col bg-gray-900 text-white shadow-lg">
 			<div className='flex-grow flex flex-col min-h-0'>
-				<div className=''>
+				<div className='' onClick={() => _onSelect()}>
 					<NavbarIcon icon={<FaFire size="28" />} text='Home' />
 				</div>
 				<div>
@@ -29,9 +35,9 @@ const Navbar = (props) => {
 				{/* <div className='flex-grow overflow-y-auto min-h-0 no-scrollbar'> */}
 				<div className='flex-grow overflow-y-auto min-h-0 no-scrollbar'>
 					<div className=''>
-						{props.steam.map((data) => {
+						{props.games.map((data) => {
 							return (
-								<div onClick={() => props.getNavData(data.appid)}>
+								<div onClick={() => {}}>
 									<NavbarIcon icon={<FaArchive size="28" />} text={data.name}/>
 								</div>
 							);
