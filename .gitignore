@@ -153,3 +153,4 @@ dist
 # cache
 /src/Assets/Banners/*
 /src/Assets/Icons/*
+/src/Assets/Headers/*
