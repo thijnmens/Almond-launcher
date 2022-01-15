@@ -3,6 +3,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
+const { DefinePlugin } = require("webpack");
 
 const isProduction = process.env.NODE_ENV == "production";
 
@@ -11,19 +12,25 @@ const stylesHandler = 'style-loader';
 const config = {
   resolve: {
     extensions: [".js",".jsx",".ts",".tsx"],
-    fallback: {
-      "fs": require.resolve('fs'),
-      "path": require.resolve('path-browserify')
+    alias: {
+      BannersPath: path.resolve(__dirname, '../../../Assets/Banners')
     }
   },
   entry: "./src/app.js",
   output: {
+    library: {type: 'system'},
     path: path.resolve(__dirname, "dist"),
+    filename: 'bundle.js',
   },
-  target: "electron-main",
+  target: "node",
   plugins: [
     new HtmlWebpackPlugin({
       template: "index.html",
+    }),
+
+    new DefinePlugin({
+      'process.env.BANNERS_PATH': JSON.stringify(path.join(__dirname, '../../../Assets/Banners')),
+      'HEADERS_PATH': JSON.stringify(path.join(__dirname, '../../../Assets/Headers')),
     }),
 
     // Add your plugins here

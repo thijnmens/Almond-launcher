@@ -1,6 +1,7 @@
 module.exports = {
 
 	// App Config
+	"isPackaged": true,
 	"title": "Almond Launcher",
 	"width": 1920,
 	"height": 1080,

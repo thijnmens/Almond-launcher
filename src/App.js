@@ -3,7 +3,6 @@ import 'react-dropdown/style.css';
 import Navbar from './Components/Navbar';
 import React from 'react';
 import useSWR from 'swr';
-import Spinner from './Assets/Chunk-4s-200px.svg';
 import useRightClickMenu from './Hooks/useRightClickMenu';
 import Contextmenu from './Components/Contextmenu';
 import Dropdownmenu from './Components/Dropdownmenu';
@@ -11,12 +10,13 @@ import Searchmenu from './Components/Searchmenu';
 import Infomenu from './Components/Infomenu';
 import { Portal } from 'react-portal';
 import Popupmenu from './Components/Popupmenu';
+import Loading from './Components/Loading';
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 function importAll(r) {
   let images = {};
-  r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); return(""); });
+  r.keys().forEach((item, index) => { images[item.replace('./', '')] = r(item); });
   return images;
 }
 
@@ -81,37 +81,77 @@ function App() {
     }
   };
 
+  function requireImages(files) {
+    const images = {
+      Banners: [],
+      Headers: [],
+      Icons: []
+    };
+    var path = "";
+    if (config.isPackaged) {
+      path = '../../..'
+    } else {  
+      path = '.'
+    }
+    try {
+      files.Banners.forEach((data) => {
+        images.Banners.push(require(`${path}/Assets/Banners/${data}`));
+      });
+      files.Headers.forEach((data) => {
+        images.Headers.push(require(`${path}/Assets/Headers/${data}`));
+      });
+      files.Icons.forEach((data) => {
+        images.Icons.push(require(`${path}/Assets/Icons/${data}`));
+      });
+    } catch (err) {console.error(err)}
+    console.log(images)
+    return images;
+  }
+
   React.useEffect(() => {
     try {
       setWidth(gridRef.current.offsetWidth)
     } catch {}
   }, [gridRef.current])
   
+  const { data: config, error: errconfig } = useSWR('http://localhost:666/app/config/get', fetcher);   //Config Library
   const { data: steam, error: errsteam } = useSWR('http://localhost:666/steam/games', fetcher);   //Steam Library
   const { data: epic, error: errepic } = useSWR('http://localhost:666/epic/games', fetcher);   //Epic Library
+  const { data: files, error: errfiles } = useSWR('http://localhost:666/app/files', fetcher);   //Images
+  if ( errconfig ) {
+    console.error(errconfig)
+    return (<div><h1 className='text-gray-200'>An error has occured while loading Config</h1></div>)
+  } else if (!config) {
+    return (<Loading />)
+  }
+
   if ( errsteam ) {
     console.error(errsteam)
     return (<div><h1 className='text-gray-200'>An error has occured while loading Steam Library</h1></div>)
   } else if (!steam) {
-    return (<div className='w-screen h-screen'><img className='w-[50%] h-[50%]' src={Spinner} alt='Spinner "Chunk" provided by loading.io' /></div>)
+    return (<Loading />)
   }
 
   if ( errepic ) {
     console.error(errepic)
-    return (<div><h1 className='text-gray-200'>An error has occured while loading Steam Library</h1></div>)
+    return (<div><h1 className='text-gray-200'>An error has occured while loading Epic Library</h1></div>)
   } else if (!epic) {
-    return (<div className='w-screen h-screen'><img className='w-[50%] h-[50%]' src={Spinner} alt='Spinner "Chunk" provided by loading.io' /></div>)
+    return (<Loading />)
   }
 
-  fetch('http://localhost:666/cache/load', {method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ steamgames: steam.response.games})})
-  const Banners = importAll(require.context('./Assets/Banners', false, /\.(jpg)$/));
-  if (!Banners) {
-    return(<div className='w-screen h-screen'><img className='w-[50%] h-[50%]' src={Spinner} alt='Spinner "Chunk" provided by loading.io' /></div>)
+  if ( errfiles ) {
+    console.error(errfiles)
+    return (<div><h1 className='text-gray-200'>An error has occured while loading Config</h1></div>)
+  } else if (!files) {
+    return (<Loading />)
   }
-  const Headers = importAll(require.context('./Assets/Headers', false, /\.(jpg)$/));
-	if (!Headers) {
-	  return(<div className='w-screen h-screen'><img className='w-[50%] h-[50%]' src={Spinner} alt='Spinner "Chunk" provided by loading.io' /></div>)
-	}
+
+  var cacheLoaded = fetch('http://localhost:666/cache/load', {method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ steamgames: steam.response.games})})
+  if(!cacheLoaded) {
+      return (<Loading />)
+  }
+
+  const images = requireImages(files);
 
   function _reloadCache() {
     fetch('http://localhost:666/cache/reload', {method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ steamgames: steam.response.games})})
@@ -128,8 +168,8 @@ function App() {
   var gamesSort = gamesOri.filter(filter)
   gamesSort.sort(sort)
   gamesSort.forEach((data) => {
-    if (sortBy == "epic"|| sortBy == "steam") {
-      if (data.launcher == sortBy) {
+    if (sortBy === "epic"|| sortBy === "steam") {
+      if (data.launcher === sortBy) {
         games.push(data)
       }
     } else {
@@ -192,13 +232,24 @@ function App() {
               </div>
                 <div ref={gridRef} className='grid grid-cols-8 grid-flow-row gap-4 p-4 ml-4 mr-4 my-5'>
                   {games.map((data, i) => {
+                    var bannerIndex, headerIndex = 0
+                    images.Banners.forEach((dataB, index) => {
+                      if (dataB.includes(`Banner_${data.appid}_600x900`)) {
+                        bannerIndex = index;
+                      };
+                    });
+                    images.Headers.forEach((dataH, index) => {
+                      if (dataH.includes(`Header_${data.appid}_1920x620`)) {
+                        headerIndex = index;
+                      };
+                    });
 						      	return (
                       <div key={i}>
                         <div className='hover:cursor-pointer banner-container' onClick={() => {setInfomenu(data.appid)}}>
-                          <img className='rounded-xl pointer-events-none block' src={Banners[`Banner_${data.appid}_600x900.jpg`]} alt={data}/>
+                          <img className='rounded-xl pointer-events-none block' src={`http://localhost:666/cache/banner/${data.appid}`} alt={data.appid}/>
                           <div className='hover-banner'>{data.name}</div>
                         </div>
-                        <Infomenu active={selected} appid={data.appid} games={games} vhwidth={width} headers={Headers} banners={Banners} />
+                        <Infomenu active={selected} appid={data.appid} games={games} vhwidth={width} headers={`http://localhost:666/cache/header/${data.appid}`} banners={`http://localhost:666/cache/banner/${data.appid}`} />
                       </div>
 						      	);
 						      })}

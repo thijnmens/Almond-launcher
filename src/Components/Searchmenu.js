@@ -15,7 +15,7 @@ const Searchmenu = (props) => {
 
 	return (
 		<div className="flex w-full">
-			<input onChange={(event) => _onChange(event.target.value)} className="flex rounded-sm w-full" size='200' type='text' autocomplete  placeholder="   Search" value={query}/>
+			<input onChange={(event) => _onChange(event.target.value)} className="flex rounded-sm w-full" size='200' type='text' autoComplete  placeholder="   Search" value={query}/>
 		</div>
 	);
 };
