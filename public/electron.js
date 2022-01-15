@@ -1,17 +1,24 @@
 const path = require('path');
 const {app, BrowserWindow, shell} = require('electron');
-const config = require('./Almond.config');
 const cheerio = require('cheerio');
 const fetch = require('node-fetch');
 const fs = require('fs');
 const client = require('https');
+const appDir = path.dirname(require.main.filename);
 var bodyParser = require('body-parser')
 var express = require('express');
-var cors = require('cors')
+var cors = require('cors');
 var api = express();
 var jsonParser = bodyParser.json();
+var config;
+if (app.isPackaged) {
+	config = require('../../../Assets/Almond.config.js');
+} else {
+	config = require('../src/Assets/Almond.config');
+}
 
 function createWindow() {
+	const newConfig = config
 	const mainWindow = new BrowserWindow({
 		title: config.title,
 		icon: './favicon.ico',
@@ -23,8 +30,14 @@ function createWindow() {
 		autoHideMenuBar: config.autoHideMenuBar,
 	});
 	if (app.isPackaged) {
+		newConfig['isPackaged'] = true;
+		newConfig['root'] = path.join(appDir.replace(/\\/g, "/"), '../');
+		fs.writeFileSync(path.join(__dirname, '../../../Assets/Almond.config.js'), `module.exports = ${JSON.stringify(newConfig)}`);
 		mainWindow.loadFile(path.join(__dirname, "../build/index.html"));
 	} else {
+		newConfig['isPackaged'] = false;
+		newConfig['root'] = path.join(appDir.replace(/\\/g, "/"), '../src/');
+		fs.writeFileSync(path.join(__dirname, '../src/Assets/Almond.config.js'), `module.exports = ${JSON.stringify(newConfig)}`);
 		mainWindow.loadURL("http://localhost:3000");
 	};
 };
@@ -152,17 +165,77 @@ api.get('/app/config/get', (req, res) => {
 	res.send(config);
 })
 
+api.get('/app/files', (req, res) => {
+	
+	var srcpath = "";
+	const tree = {
+		Banners: [],
+		Headers: [],
+		Icons: []
+	};
+
+	if (app.isPackaged) {
+		srcpath = "../../.."
+	} else {
+		srcpath = "../src"
+	}
+
+	const Banners = fs.readdirSync(path.join(appDir, `${srcpath}/Assets/Banners`), (err) => {
+		if (err) {
+			res.sendStatus(500);
+		};
+	});
+
+	const Headers = fs.readdirSync(path.join(appDir, `${srcpath}/Assets/Headers`), (err) => {
+		if (err) {
+			res.sendStatus(500);
+		};
+	});
+
+	const Icons = fs.readdirSync(path.join(appDir, `${srcpath}/Assets/Icons`), (err) => {
+		if (err) {
+			res.sendStatus(500);
+		};
+	});
+
+	tree.Banners = Banners;
+	tree.Headers = Headers;
+	tree.Icons = Icons;
+
+	res.send(tree);
+})
+
 api.get('/steam/launch/:id', (req, res) => {
 	shell.openExternal(`steam://rungameid/${req.params.id}`)
 	res.sendStatus(200);
 })
 
+api.get('/cache/banner/:id', (req, res) => {
+	if (app.isPackaged) {
+		res.sendFile(path.join(__dirname, `../Assets/Banners/Banner_${req.params.id}_600x900.jpg`));
+	} else {
+		res.sendFile(path.join(__dirname, `../src/Assets/Banners/Banner_${req.params.id}_600x900.jpg`));
+	}	
+})
+
+api.get('/cache/header/:id', (req, res) => {
+	if (app.isPackaged) {
+		res.sendFile(path.join(__dirname, `../Assets/Headers/Header_${req.params.id}_1920x620.jpg`));
+	} else {
+		res.sendFile(path.join(__dirname, `../src/Assets/Headers/Header_${req.params.id}_1920x620.jpg`));
+	}	
+})
+
 api.post('/app/config/post', jsonParser, (req, res) => {
 	const newConfig = config
 	req.body.config.forEach((data) => {
-		newConfig[data.key] = data.value
+		newConfig[data.key] = data.value + '\n'
 	})
-	fs.writeFileSync('./public/Almond.config.js', `module.exports = ${JSON.stringify(newConfig)}`);
+	if (app.isPackaged) {
+		fs.writeFileSync('../../../Assets/Almond.config.js', `module.exports = ${JSON.stringify(newConfig)}`);
+	} else {
+		fs.writeFileSync('./Assets/Almond.config.js', `module.exports = ${JSON.stringify(newConfig)}`);
+	}
 	res.sendStatus(200);
 });
 
