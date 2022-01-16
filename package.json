@@ -8,6 +8,7 @@
   "dependencies": {
     "@craco/craco": "^6.4.3",
     "@node-steam/vdf": "^2.2.0",
+    "@ramonak/react-progress-bar": "^4.2.0",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -20,6 +21,7 @@
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "crypto-browserify": "^3.12.0",
+    "image-downloader": "^4.0.3",
     "jquery": "^3.6.0",
     "list-react-files": "^0.2.0",
     "node-fetch": "2",
@@ -110,7 +112,6 @@
           "**/*"
         ]
       }
-    ],
-    "asar": false
+    ]
   }
 }

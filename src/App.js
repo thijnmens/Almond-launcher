@@ -104,7 +104,6 @@ function App() {
         images.Icons.push(require(`${path}/Assets/Icons/${data}`));
       });
     } catch (err) {console.error(err)}
-    console.log(images)
     return images;
   }
 
