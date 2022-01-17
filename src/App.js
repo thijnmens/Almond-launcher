@@ -27,6 +27,7 @@ function App() {
   const gridRef = React.useRef();
 
   const [selected, setSelected] = React.useState(0);
+  const [firstLoad, setFirstLoad] = React.useState(false);
   const [sortBy, setSortBy] = React.useState("playtime_forever");
   const [query, setQuery] = React.useState("");
   const [width, setWidth] = React.useState(0.0);
@@ -145,9 +146,12 @@ function App() {
     return (<Loading />)
   }
 
-  var cacheLoaded = fetch('http://localhost:666/cache/load', {method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ steamgames: steam.response.games})})
-  if(!cacheLoaded) {
-      return (<Loading />)
+  if (firstLoad === false) {
+    setFirstLoad(true)
+    var cacheLoaded = fetch('http://localhost:666/cache/load', {method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ steamgames: steam.response.games})})
+    if(!cacheLoaded) {
+        return (<Loading />)
+    }
   }
 
   const images = requireImages(files);
