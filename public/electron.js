@@ -18,6 +18,7 @@ if (app.isPackaged) {
 }
 
 function createWindow() {
+	fetch(`http://localhost:666/cache/load`, {"content-type": "application/json", "Access-Control-Allow-Origin": "*"});
 	const newConfig = config
 	const mainWindow = new BrowserWindow({
 		title: config.title,
@@ -136,31 +137,35 @@ api.get('/epic/games', (req, res) => {
 		return data;
 	};
 
-	var data = [];
-	const dirs = fs.readdirSync(dirname, { withFileTypes: true });
-	data.push(dirs.filter(i => i.isFile()).map((filename) => {
-		const file = JSON.parse(fs.readFileSync(dirname + filename.name, 'ascii'));
-		const URL = `https://www.epicgames.com/store/en-US/browse?q=${file.CatalogItemId}&sortBy=releaseDate&sortDir=ASC&count=1`
-		const getGameImage = async () => {
-			const page = await getRawData(URL);
-			const $ = cheerio.load(page)
-			const a = $(this)
-			const gameImage = a.find('.css-1lozana').children('img').eq(0).attr('src')
-		}
-		getGameImage();
-		const parsedfile = {
-			launcher: "epic",
-			appid: file.CatalogItemId,
-			name: file.DisplayName,
-			playtime_forever: 0,
-			img_icon_url: "",
-			img_logo_url: "",
-			playtime_windows_forever: 0,
-			playtime_mac_forever: 0,
-			playtime_linux_forever: 0
-		}
-		return parsedfile
-	}));
+	try {
+		var data = [];
+		const dirs = fs.readdirSync(dirname, { withFileTypes: true });
+		data.push(dirs.filter(i => i.isFile()).map((filename) => {
+			const file = JSON.parse(fs.readFileSync(dirname + filename.name, 'ascii'));
+			const URL = `https://www.epicgames.com/store/en-US/browse?q=${file.CatalogItemId}&sortBy=releaseDate&sortDir=ASC&count=1`
+			const getGameImage = async () => {
+				const page = await getRawData(URL);
+				const $ = cheerio.load(page)
+				const a = $(this)
+				const gameImage = a.find('.css-1lozana').children('img').eq(0).attr('src')
+			}
+			getGameImage();
+			const parsedfile = {
+				launcher: "epic",
+				appid: file.CatalogItemId,
+				name: file.DisplayName,
+				playtime_forever: 0,
+				img_icon_url: "",
+				img_logo_url: "",
+				playtime_windows_forever: 0,
+				playtime_mac_forever: 0,
+				playtime_linux_forever: 0
+			}
+			return parsedfile
+		}));
+	} catch {
+		data = []
+	}
 
 	res.send(data);
 });

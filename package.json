@@ -101,6 +101,25 @@
       "target": "nsis",
       "icon": "public/icon.ico"
     },
+    "linux": {
+      "desktop": {
+        "StartupNotify": "false",
+        "Encoding": "UTF-8",
+        "MimeType": "x-scheme-handler/deeplink"
+      },
+      "target": ["AppImage", "rpm", "deb"]
+    },
+    "deb": {
+      "priority": "optional"
+    },
+    "rpm": {},
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "uninstallDisplayName": "No u",
+      "license": "./License"
+    },
     "files": [
       "**/*"
     ],

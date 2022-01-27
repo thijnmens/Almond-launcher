@@ -153,6 +153,14 @@ function App() {
         return (<Loading />)
     }
   }
+  
+  if (firstLoad === false) {
+    setFirstLoad(true)
+    var cacheLoaded = fetch('http://localhost:666/cache/load', {method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ steamgames: steam.response.games})})
+    if(!cacheLoaded) {
+        return (<Loading />)
+    }
+  }
 
   const images = requireImages(files);
 
@@ -161,11 +169,13 @@ function App() {
   };
 
   var gamesOri = steam.response.games
-  epic[0].forEach((data) => {
-    if (!gamesOri.includes(data)) {
-      gamesOri.push(data)
-    }
-  })
+  try {
+    epic[0].forEach((data) => {
+      if (!gamesOri.includes(data)) {
+        gamesOri.push(data)
+      };
+    });
+  } catch {}
 
   var games = [];
   var gamesSort = gamesOri.filter(filter)

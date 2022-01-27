@@ -67,20 +67,19 @@ const Infomenu = (props) => {
 		var index = getIndex(props.games, props.appid, props.vhwidth)
 
 		return (
-			<div className="infomenu" style={{marginLeft: `-${index}px`}}>
-				<div className='absolute left-40 top-16 z-50 shadow-xl'>
-					<img alt="Banner" width="340" height="510" classname='rounded-lg' src={props.banners} />
+			<div className="infomenu h-[50vh]" style={{marginLeft: `-${index}px`}}>
+				<div className='absolute left-40 top-10 z-50 shadow-xl'>
+					<img alt="Banner" width={props.vhwidth * 0.15} classname='rounded-lg' src={props.banners} />
 				</div>
-				<img alt="Header" className='rounded-lg absolute top-0 left-0 object-cover z-10 h-[40rem] w-[93vw]' src={props.headers} />
+				<img alt="Header" className='rounded-lg absolute top-0 left-0 object-cover z-10 h-[50vh] w-[93vw]' src={props.headers} />
 				<div className='rounded-lg absolute w-[93vw] bottom-0 left-0 infomenubar z-10' >
 					<div className='m-0 absolute top-[35%] left-[32%]'>
 						<button onClick={() => fetch(`http://localhost:666/steam/launch/${props.appid}`,{method: 'GET', headers: { 'Content-Type': 'application/json' }})} className='bg-gray-900 px-7 py-2 rounded-sm font-bold hover:bg-gray-700'>Launch</button>
 					</div>
 					<div className='m-0 absolute w-[20%] top-[40%] left-[45%]'>
-						<ProgressBar completed={completion.precentage} barContainerClassName='bg-gray-800 rounded-lg' bgColor="#2563eb"  />
+						<ProgressBar completed={completion.precentage} barContainerClassName='bg-gray-800 rounded-lg overflow-hidden' bgColor="#2563eb"  />
 					</div>
 				</div>
-				
 			</div>
 		);
 	} else {
