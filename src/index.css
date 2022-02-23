@@ -88,7 +88,7 @@
 	}
 
 	.infomenu {
-		@apply relative bg-gray-900 text-gray-200 rounded-lg h-[40rem] w-[93vw] overflow-visible text-center m-7 transition duration-500 ease-linear;
+		@apply relative bg-gray-900 text-gray-200 rounded-lg w-[93vw] overflow-visible text-center m-7 transition duration-500 ease-linear;
 		flex: 0 0 auto;
 	}
 
