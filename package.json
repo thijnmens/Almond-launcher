@@ -1,117 +1,117 @@
 {
-  "name": "almond_launcher",
-  "author": "Thijn Smulders",
-  "version": "0.1.0",
-  "private": true,
-  "main": "public/electron.js",
-  "homepage": "./",
-  "dependencies": {
-    "@craco/craco": "^6.4.3",
-    "@node-steam/vdf": "^2.2.0",
-    "@ramonak/react-progress-bar": "^4.2.0",
-    "@testing-library/jest-dom": "^5.16.1",
-    "@testing-library/react": "^12.1.2",
-    "@testing-library/user-event": "^13.5.0",
-    "@webpack-cli/generators": "^2.4.1",
-    "autoprefixer": "9",
-    "body-parser": "^1.19.1",
-    "cheerio": "^1.0.0-rc.10",
-    "child_process": "^1.0.2",
-    "concurrently": "^6.5.1",
-    "cors": "^2.8.5",
-    "cross-env": "^7.0.3",
-    "crypto-browserify": "^3.12.0",
-    "image-downloader": "^4.0.3",
-    "jquery": "^3.6.0",
-    "list-react-files": "^0.2.0",
-    "node-fetch": "2",
-    "path-browserify": "^1.0.1",
-    "postcss": "^8",
-    "postcss-loader": "^6.2.1",
-    "python-shell": "^3.0.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-dropdown": "^1.9.2",
-    "react-icons": "^4.3.1",
-    "react-popper": "^2.2.5",
-    "react-popperjs": "^0.0.3",
-    "react-portal": "^4.2.1",
-    "react-scripts": "5.0.0",
-    "react-tooltip": "^4.2.21",
-    "require-context": "^1.1.0",
-    "style-loader": "^3.3.1",
-    "swr": "^1.1.1",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
-    "wait-on": "^6.0.0",
-    "web-vitals": "^2.1.2",
-    "webpack": "^5.66.0",
-    "webpack-cli": "^4.9.1",
-    "workbox-webpack-plugin": "^6.4.2"
-  },
-  "scripts": {
-    "start": "concurrently \"cross-env BROWSER=none cross-env TAILWIND_MODE=watch craco start\" \"wait-on http://localhost:3000 && electron .\"",
-    "build": "craco build --mode=production --node-env=production",
-    "test": "craco test",
-    "eject": "craco eject",
-    "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production --node-env=production",
-    "watch": "webpack --watch",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "@babel/core": "^7.16.5",
-    "@babel/preset-env": "^7.16.5",
-    "@babel/preset-react": "^7.16.7",
-    "babel-loader": "^8.2.3",
-    "babel-plugin-tailwind": "^0.1.10",
-    "electron": "^16.0.5",
-    "electron-builder": "^22.14.5",
-    "electron-packager": "^15.4.0",
-    "express": "^4.17.2",
-    "fs": "^0.0.1-security",
-    "html-webpack-plugin": "^5.5.0",
-    "postcss-flexbugs-fixes": "^5.0.2",
-    "postcss-preset-env": "^7.2.0",
-    "prettier": "^2.5.1",
-    "raw-loader": "^4.0.2"
-  },
-  "description": "An all-in-one game launcher",
-  "build": {
-    "appId": "666",
-    "win": {
-      "target": "nsis",
-      "icon": "public/icon.ico"
-    },
-    "files": [
-      "**/*"
-    ],
-    "extraFiles": [
-      {
-        "from": "src/Assets",
-        "to": "Assets",
-        "filter": [
-          "**/*"
-        ]
-      }
-    ]
-  }
+	"name": "almond_launcher",
+	"author": "Thijn Smulders",
+	"version": "0.1.0",
+	"private": true,
+	"main": "public/electron.js",
+	"homepage": "./",
+	"dependencies": {
+		"@craco/craco": "^6.4.3",
+		"@node-steam/vdf": "^2.2.0",
+		"@ramonak/react-progress-bar": "^4.2.0",
+		"@testing-library/jest-dom": "^5.16.1",
+		"@testing-library/react": "^12.1.2",
+		"@testing-library/user-event": "^13.5.0",
+		"@webpack-cli/generators": "^2.4.1",
+		"autoprefixer": "9",
+		"body-parser": "^1.19.1",
+		"cheerio": "^1.0.0-rc.10",
+		"child_process": "^1.0.2",
+		"concurrently": "^6.5.1",
+		"cors": "^2.8.5",
+		"cross-env": "^7.0.3",
+		"crypto-browserify": "^3.12.0",
+		"image-downloader": "^4.0.3",
+		"jquery": "^3.6.0",
+		"list-react-files": "^0.2.0",
+		"node-fetch": "2",
+		"path-browserify": "^1.0.1",
+		"postcss": "^8",
+		"postcss-loader": "^6.2.1",
+		"python-shell": "^3.0.1",
+		"react": "^17.0.2",
+		"react-dom": "^17.0.2",
+		"react-dropdown": "^1.9.2",
+		"react-icons": "^4.3.1",
+		"react-popper": "^2.2.5",
+		"react-popperjs": "^0.0.3",
+		"react-portal": "^4.2.1",
+		"react-scripts": "5.0.0",
+		"react-tooltip": "^4.2.21",
+		"require-context": "^1.1.0",
+		"style-loader": "^3.3.1",
+		"swr": "^1.1.1",
+		"tailwindcss": "npm:@tailwindcss/postcss7-compat",
+		"wait-on": "^6.0.0",
+		"web-vitals": "^2.1.2",
+		"webpack": "^5.66.0",
+		"webpack-cli": "^4.9.1",
+		"workbox-webpack-plugin": "^6.4.2"
+	},
+	"scripts": {
+		"start": "concurrently \"cross-env BROWSER=none cross-env TAILWIND_MODE=watch craco start\" \"wait-on http://localhost:3000 && electron .\"",
+		"build": "craco build --mode=production --node-env=production",
+		"test": "craco test",
+		"eject": "craco eject",
+		"build:dev": "webpack --mode=development",
+		"build:prod": "webpack --mode=production --node-env=production",
+		"watch": "webpack --watch",
+		"pack": "electron-builder --dir",
+		"dist": "electron-builder"
+	},
+	"eslintConfig": {
+		"extends": [
+			"react-app",
+			"react-app/jest"
+		]
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"devDependencies": {
+		"@babel/core": "^7.16.5",
+		"@babel/preset-env": "^7.16.5",
+		"@babel/preset-react": "^7.16.7",
+		"babel-loader": "^8.2.3",
+		"babel-plugin-tailwind": "^0.1.10",
+		"electron": "^16.0.5",
+		"electron-builder": "^22.14.5",
+		"electron-packager": "^15.4.0",
+		"express": "^4.17.2",
+		"fs": "^0.0.1-security",
+		"html-webpack-plugin": "^5.5.0",
+		"postcss-flexbugs-fixes": "^5.0.2",
+		"postcss-preset-env": "^7.2.0",
+		"prettier": "^2.5.1",
+		"raw-loader": "^4.0.2"
+	},
+	"description": "An all-in-one game launcher",
+	"build": {
+		"appId": "666",
+		"win": {
+			"target": "nsis",
+			"icon": "public/icon.ico"
+		},
+		"files": [
+			"**/*"
+		],
+		"extraFiles": [
+			{
+				"from": "src/Assets",
+				"to": "Assets",
+				"filter": [
+					"**/*"
+				]
+			}
+		]
+	}
 }

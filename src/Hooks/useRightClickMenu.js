@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export default function useRightClickMenu() {
 	const [x, setX] = useState(0);
@@ -26,4 +26,4 @@ export default function useRightClickMenu() {
 	});
 
 	return { x, y, showMenu };
-};
+}
