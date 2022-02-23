@@ -74,7 +74,7 @@ const Infomenu = (props) => {
 
 		return (
 			<div className="infomenu" style={{ marginLeft: `-${index}px` }}>
-				<div className="absolute left-40 top-16 z-50 shadow-xl">
+				<div className="left-40 top-16 z-50 shadow-xl">
 					<img
 						alt="Banner"
 						width="340"
@@ -88,7 +88,7 @@ const Infomenu = (props) => {
 					className="rounded-lg absolute top-0 left-0 object-cover z-10 h-[40rem] w-[93vw]"
 					src={props.headers}
 				/>
-				<div className="rounded-lg absolute w-[93vw] bottom-0 left-0 infomenubar z-10">
+				<div className="rounded-lg w-[93vw] bottom-0 left-0 infomenubar z-10">
 					<div className="m-0 absolute top-[35%] left-[32%]">
 						<button
 							onClick={() =>
