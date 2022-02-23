@@ -1,1 +1,20 @@
-module.exports = {"isPackaged":false,"root":"C:\\Users\\Informatica 15\\Desktop\\Almond Launcher\\Almond-Launcher\\src\\","title":"Almond Launcher","width":1920,"height":1080,"autoHideMenuBar":true,"API_port":666,"Steam_ID":"76561198446051555","Steam_Key":"A9BE8D7D551A2570041944C401C22FBC"}
+// FILL THESE IN!!!
+////////////////////////
+const vars = {
+	steam_id: 'STEAM_ID',
+	steam_key: 'STEAM_KEY', // You can get this from https://steamcommunity.com/dev/apikey
+};
+
+////////////////////////
+
+module.exports = {
+	isPackaged: true,
+	root: '',
+	title: 'Almond Launcher',
+	width: 1920,
+	height: 1080,
+	autoHideMenuBar: true,
+	API_port: 666,
+	Steam_ID: vars.steam_id,
+	Steam_Key: vars.steam_key,
+};
