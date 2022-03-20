@@ -1,6 +1,6 @@
 import { BiAddToQueue, BiPackage } from 'react-icons/bi';
 import { RiSettingsFill, RiListCheck2 } from 'react-icons/ri';
-import { BsListNested, BsFillTrashFill } from 'react-icons/bs';
+import { BsFillTrashFill } from 'react-icons/bs';
 import { IoMdPlay } from 'react-icons/io';
 
 const Contextmenu = ({ x, y, showMenu }) => {

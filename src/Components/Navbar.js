@@ -27,15 +27,15 @@ const Navbar = (props) => {
 				</div>
 				<div>
 					<svg width="64px" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1">
-						<line class="spacer" x1="10" x2="54" y1="0" y2="0" />
+						<line className="spacer" x1="10" x2="54" y1="0" y2="0" />
 					</svg>
 				</div>
 				{/* <div className='flex-grow overflow-y-auto min-h-0 no-scrollbar'> */}
 				<div className="flex-grow overflow-y-auto min-h-0 no-scrollbar">
 					<div className="">
-						{props.games.map((data) => {
+						{props.games.map((data, index) => {
 							return (
-								<div onClick={() => {}}>
+								<div key={index} onClick={() => {}}>
 									<NavbarIcon icon={<FaArchive size="28" />} text={data.name} />
 								</div>
 							);
@@ -45,11 +45,17 @@ const Navbar = (props) => {
 				<div
 					className=""
 					onClick={() => {
-						alert('PogO');
+						fetch(`http://localhost:666/app/openexternal/`, {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({
+								url: 'https://github.com/thijnmens/Almond-launcher',
+							}),
+						});
 					}}
 				>
 					<svg width="64px" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1">
-						<line class="spacer" x1="10" x2="54" y1="0" y2="0" />
+						<line className="spacer" x1="10" x2="54" y1="0" y2="0" />
 					</svg>
 					<NavbarIcon icon={<FaGithub size="28" />} text="Contact" />
 				</div>

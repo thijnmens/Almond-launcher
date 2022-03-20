@@ -14,14 +14,6 @@ import Loading from './Components/Loading';
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
-function importAll(r) {
-	let images = {};
-	r.keys().forEach((item, index) => {
-		images[item.replace('./', '')] = r(item);
-	});
-	return images;
-}
-
 function App() {
 	const { x, y, showMenu } = useRightClickMenu();
 
@@ -83,39 +75,11 @@ function App() {
 		}
 	}
 
-	function requireImages(files) {
-		const images = {
-			Banners: [],
-			Headers: [],
-			Icons: [],
-		};
-		var path = '';
-		if (config.isPackaged) {
-			path = '../../..';
-		} else {
-			path = '.';
-		}
-		try {
-			files.Banners.forEach((data) => {
-				images.Banners.push(require(`${path}/Assets/Banners/${data}`));
-			});
-			files.Headers.forEach((data) => {
-				images.Headers.push(require(`${path}/Assets/Headers/${data}`));
-			});
-			files.Icons.forEach((data) => {
-				images.Icons.push(require(`${path}/Assets/Icons/${data}`));
-			});
-		} catch (err) {
-			console.error(err);
-		}
-		return images;
-	}
-
 	React.useEffect(() => {
 		try {
 			setWidth(gridRef.current.offsetWidth);
 		} catch {}
-	}, [gridRef.current]);
+	}, [gridRef.current]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const { data: config, error: errconfig } = useSWR(
 		'http://localhost:666/app/config/get',
@@ -179,8 +143,6 @@ function App() {
 			return <Loading />;
 		}
 	}
-
-	const images = requireImages(files);
 
 	function _reloadCache() {
 		fetch('http://localhost:666/cache/reload', {
@@ -278,18 +240,6 @@ function App() {
 									className="grid grid-cols-8 grid-flow-row gap-4 p-4 ml-4 mr-4 my-5"
 								>
 									{games.map((data, i) => {
-										var bannerIndex,
-											headerIndex = 0;
-										images.Banners.forEach((dataB, index) => {
-											if (dataB.includes(`Banner_${data.appid}_600x900`)) {
-												bannerIndex = index;
-											}
-										});
-										images.Headers.forEach((dataH, index) => {
-											if (dataH.includes(`Header_${data.appid}_1920x620`)) {
-												headerIndex = index;
-											}
-										});
 										return (
 											<div key={i}>
 												<div
@@ -312,6 +262,7 @@ function App() {
 													vhwidth={width}
 													headers={`http://localhost:666/cache/header/${data.appid}`}
 													banners={`http://localhost:666/cache/banner/${data.appid}`}
+													config={config}
 												/>
 											</div>
 										);

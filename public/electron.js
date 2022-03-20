@@ -2,51 +2,82 @@ const path = require('path');
 const { app, BrowserWindow, shell } = require('electron');
 const cheerio = require('cheerio');
 const fetch = require('node-fetch');
+const open = require('open');
 const fs = require('fs');
+const https = require('https');
 const download = require('image-downloader');
 const appDir = path.dirname(require.main.filename);
+var exec = require('child_process').execFile;
+var GithubDownloader = require('download-github-release');
 var bodyParser = require('body-parser');
 var express = require('express');
 var cors = require('cors');
 var api = express();
 var jsonParser = bodyParser.json();
-var config;
+var Config;
 if (app.isPackaged) {
-	config = require('../../../Assets/Almond.config.js');
+	Config = require('../../../Config/Config.json');
 } else {
-	config = require('../src/Assets/Almond.config');
+	Config = require('../src/Config/Config.json');
 }
 
 function createWindow() {
+	if (app.isPackaged) {
+		if (!fs.existsSync(path.join(__dirname, '../../../Assets/Banners'))) {
+			fs.mkdirSync(path.join(__dirname, '../../../Assets/Banners'));
+		}
+		if (!fs.existsSync(path.join(__dirname, '../../../Assets/Headers'))) {
+			fs.mkdirSync(path.join(__dirname, '../../../Assets/Headers'));
+		}
+		if (!fs.existsSync(path.join(__dirname, '../../../Assets/Icons'))) {
+			fs.mkdirSync(path.join(__dirname, '../../../Assets/Icons'));
+		}
+		if (!fs.existsSync(path.join(__dirname, '../../../Mods'))) {
+			fs.mkdirSync(path.join(__dirname, '../../../Mods'));
+		}
+	} else {
+		if (!fs.existsSync(path.join(__dirname, '../src/Assets/Banners'))) {
+			fs.mkdirSync(path.join(__dirname, '../src/Assets/Banners'));
+		}
+		if (!fs.existsSync(path.join(__dirname, '../src/Assets/Headers'))) {
+			fs.mkdirSync(path.join(__dirname, '../src/Assets/Headers'));
+		}
+		if (!fs.existsSync(path.join(__dirname, '../src/Assets/Icons'))) {
+			fs.mkdirSync(path.join(__dirname, '../src/Assets/Icons'));
+		}
+		if (!fs.existsSync(path.join(__dirname, '../src/Mods'))) {
+			fs.mkdirSync(path.join(__dirname, '../src/Mods'));
+		}
+	}
 	fetch(`http://localhost:666/cache/load`, {
 		'content-type': 'application/json',
 		'Access-Control-Allow-Origin': '*',
 	});
-	const newConfig = config;
+	const newConfig = Config;
 	const mainWindow = new BrowserWindow({
-		title: config.title,
+		title: Config.General.Title,
 		icon: './favicon.ico',
-		width: config.width,
-		height: config.height,
+		width: Config.General.Width,
+		height: Config.General.Height,
 		webPreferences: {
 			nodeIntegration: true,
 		},
-		autoHideMenuBar: config.autoHideMenuBar,
+		autoHideMenuBar: Config.General.AutoHideMenuBar,
 	});
 	if (app.isPackaged) {
-		newConfig['isPackaged'] = true;
-		newConfig['root'] = path.join(appDir.replace(/\\/g, '/'), '../');
+		newConfig.General.IsPackaged = true;
+		newConfig.General.Root = path.join(appDir.replace(/\\/g, '/'), '../');
 		fs.writeFileSync(
-			path.join(__dirname, '../../../Assets/Almond.config.js'),
-			`module.exports = ${JSON.stringify(newConfig)}`
+			path.join(__dirname, '../../../Config/Config.json'),
+			`${JSON.stringify(newConfig)}`
 		);
 		mainWindow.loadFile(path.join(__dirname, '../build/index.html'));
 	} else {
-		newConfig['isPackaged'] = false;
-		newConfig['root'] = path.join(appDir.replace(/\\/g, '/'), '../src/');
+		newConfig.General.IsPackaged = false;
+		newConfig.General.Root = path.join(appDir.replace(/\\/g, '/'), '../src/');
 		fs.writeFileSync(
-			path.join(__dirname, '../src/Assets/Almond.config.js'),
-			`module.exports = ${JSON.stringify(newConfig)}`
+			path.join(__dirname, '../src/Config/Config.json'),
+			`${JSON.stringify(newConfig)}`
 		);
 		mainWindow.loadURL('http://localhost:3000');
 	}
@@ -69,6 +100,10 @@ app.on('activate', () => {
 /////////////
 //   API   //
 /////////////
+
+function filterRelease(release) {
+	return release.prerelease === false;
+}
 
 async function downloadImage(url, filepath, type) {
 	return download
@@ -107,7 +142,7 @@ api.get('/steam/games', async (req, res) => {
 		},
 	};
 	const responseGame = await fetch(
-		`https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${config.Steam_Key}&steamid=${config.Steam_ID}&include_appinfo=true&format=json`,
+		`https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${Config.Steam.SteamKey}&steamid=${Config.Steam.SteamID}&include_appinfo=true&format=json`,
 		{ 'content-type': 'application/json', 'Access-Control-Allow-Origin': '*' }
 	);
 	if (responseGame.status !== 200) {
@@ -135,7 +170,7 @@ api.get('/steam/games', async (req, res) => {
 
 api.get('/steam/achievements/:id', async (req, res) => {
 	const response = await fetch(
-		`https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${config.Steam_Key}&steamid=${config.Steam_ID}&appid=${req.params.id}&l=english&include_appinfo=true&format=json`,
+		`https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${Config.Steam.SteamKey}&steamid=${Config.Steam.SteamID}&appid=${req.params.id}&l=english&include_appinfo=true&format=json`,
 		{ 'content-type': 'application/json', 'Access-Control-Allow-Origin': '*' }
 	);
 	if (response.status !== 200) {
@@ -193,7 +228,7 @@ api.get('/epic/games', (req, res) => {
 });
 
 api.get('/app/config/get', (req, res) => {
-	res.send(config);
+	res.send(Config);
 });
 
 api.get('/app/files', (req, res) => {
@@ -240,6 +275,102 @@ api.get('/steam/launch/:id', (req, res) => {
 	res.sendStatus(200);
 });
 
+api.get('/steam/verify/:id', (req, res) => {
+	shell.openExternal(`steam://validate/${req.params.id}`);
+	res.sendStatus(200);
+});
+
+api.get('/steam/uninstall/:id', (req, res) => {
+	shell.openExternal(`steam://uninstall/${req.params.id}`);
+	res.sendStatus(200);
+});
+
+api.get('/mods/launch/:id', (req, res) => {
+	if (app.isPackaged) {
+		exec(
+			path.join(__dirname, `../../../Mods/${Config.Mods.Supported[req.params.id].FileName}`)
+		);
+		res.sendStatus(200);
+	} else {
+		exec(path.join(__dirname, `../src/Mods/${Config.Mods.Supported[req.params.id].FileName}`));
+		res.sendStatus(200);
+	}
+});
+
+api.get('/mods/download/:id', (req, res) => {
+	if (Config.Mods.Supported[req.params.id]) {
+		if (Config.Mods.Supported[req.params.id].Type === 'Github') {
+			if (app.isPackaged) {
+				GithubDownloader(
+					Config.Mods.Supported[req.params.id].User,
+					Config.Mods.Supported[req.params.id].Repo,
+					path.join(__dirname, `../../../Mods`),
+					filterRelease,
+					() => {
+						return true;
+					},
+					true
+				)
+					.then(() => {
+						res.sendStatus(200);
+					})
+					.catch((err) => {
+						console.error(err.message);
+						res.sendStatus(500);
+					});
+			} else {
+				GithubDownloader(
+					Config.Mods.Supported[req.params.id].User,
+					Config.Mods.Supported[req.params.id].Repo,
+					path.join(__dirname, `../src/Mods`),
+					filterRelease,
+					() => {
+						return true;
+					},
+					true
+				)
+					.then(() => {
+						res.sendStatus(200);
+					})
+					.catch((err) => {
+						console.error(err.message);
+						res.sendStatus(500);
+					});
+			}
+		} else {
+			https.get(Config.Mods.Supported[req.params.id].Download, (response) => {
+				if (app.isPackaged) {
+					const file = fs.createWriteStream(
+						path.join(
+							__dirname,
+							`../../../Mods/${Config.Mods.Supported[req.params.id].FileName}`
+						)
+					);
+					response.pipe(file);
+					file.on('finish', () => {
+						file.close();
+					});
+					res.sendStatus(200);
+				} else {
+					const file = fs.createWriteStream(
+						path.join(
+							__dirname,
+							`../src/Mods/${Config.Mods.Supported[req.params.id].FileName}`
+						)
+					);
+					response.pipe(file);
+					file.on('finish', () => {
+						file.close();
+					});
+					res.sendStatus(200);
+				}
+			});
+		}
+	} else {
+		res.sendStatus(406);
+	}
+});
+
 api.get('/cache/banner/:id', (req, res) => {
 	if (app.isPackaged) {
 		res.sendFile(
@@ -264,21 +395,20 @@ api.get('/cache/header/:id', (req, res) => {
 	}
 });
 
+api.post('/app/openexternal', jsonParser, (req, res) => {
+	open(req.body.url);
+	res.sendStatus(200);
+});
+
 api.post('/app/config/post', jsonParser, (req, res) => {
-	const newConfig = config;
-	req.body.config.forEach((data) => {
+	const newConfig = Config;
+	req.body.Config.forEach((data) => {
 		newConfig[data.key] = data.value + '\n';
 	});
 	if (app.isPackaged) {
-		fs.writeFileSync(
-			'../../../Assets/Almond.config.js',
-			`module.exports = ${JSON.stringify(newConfig)}`
-		);
+		fs.writeFileSync('../../../Config/Config.json', `${JSON.stringify(newConfig)}`);
 	} else {
-		fs.writeFileSync(
-			'./Assets/Almond.config.js',
-			`module.exports = ${JSON.stringify(newConfig)}`
-		);
+		fs.writeFileSync('./Config/Config.json', `${JSON.stringify(newConfig)}`);
 	}
 	res.sendStatus(200);
 });
@@ -357,6 +487,6 @@ api.post('/cache/reload', jsonParser, async (req, res) => {
 	res.sendStatus(200);
 });
 
-api.listen(config.API_port, () =>
-	console.log(`API launched sucessfully on: http://localhost:${config.API_port}`)
+api.listen(Config.General.APIPort, () =>
+	console.log(`API launched sucessfully on: http://localhost:${Config.General.APIPort}`)
 );

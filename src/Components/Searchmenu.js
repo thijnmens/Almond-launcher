@@ -19,7 +19,6 @@ const Searchmenu = (props) => {
 				className="flex rounded-sm w-full"
 				size="200"
 				type="text"
-				autoComplete
 				placeholder="   Search"
 				value={query}
 			/>

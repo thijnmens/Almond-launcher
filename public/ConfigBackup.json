@@ -1,0 +1,48 @@
+{
+	"General": {
+		"IsPackaged": false,
+		"Root": "",
+		"Title": "Almond Launcher",
+		"Width": 1920,
+		"Height": 1080,
+		"AutoHideMenuBar": true,
+		"APIPort": 666
+	},
+	"Steam": {
+		"_1": "///////////////////////////////////////////////////////////////",
+		"_Comment": "You can get your Steam ID and Key from these 2 links ",
+		"_Link 1": "https://www.youtube.com/watch?v=gQuelApsq7k",
+		"_Link 2": "https://steamcommunity.com/dev/apikey",
+		"_2": "///////////////////////////////////////////////////////////////",
+		"SteamID": "XXXXXXXXXXXXXXXXX",
+		"SteamKey": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+	},
+	"Epic Games": {},
+	"Mods": {
+		"Supported": {
+			"620980": {
+				"Type": "Github",
+				"FileName": "ModAssistant.exe",
+				"User": "Assistant",
+				"Repo": "ModAssistant",
+				"Prerelease": false,
+				"CompatiblePlatforms": ["Windows"]
+			},
+			"not620980": {
+				"Type": "NotGithub",
+				"FileName": "ModAssistant.exe",
+				"Download": "https://github.com/Assistant/ModAssistant/releases/download/v1.1.26/ModAssistant.exe",
+				"CompatiblePlatforms": ["Windows"]
+			}
+		}
+	},
+	"Settings": {
+		"Supported": {
+			"620980": {
+				"Files": [
+					"C:\\Users\\%USERNAME%\\AppData\\LocalLow\\Hyperbolic Magnetism\\Beat Saber\\settings.cfg"
+				]
+			}
+		}
+	}
+}

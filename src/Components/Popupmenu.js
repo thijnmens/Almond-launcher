@@ -35,7 +35,7 @@ function renderSwitch(data) {
 							<button
 								className="bg-gray-900 px-5 rounded-sm border-none text-gray-200 font-bold hover:bg-gray-700"
 								onClick={() => {
-									data2.onClick();
+									data2.clicked();
 								}}
 							>
 								{data2.title}
@@ -56,12 +56,12 @@ const Popupmenu = (props) => {
 
 	return (
 		<div className="popupmenu">
-			<div className="flex absolute left-[30vw] top-[10vh] w-[40vw] h-[80vh] bg-gray-800 rounded-3xl z-50 text-gray-200">
-				<table className="w-full mt-7 text-center">
+			<div className="flex absolute left-[30vw] top-[10vh] w-[40vw] bg-gray-800 rounded-3xl z-50 text-gray-200">
+				<table className="w-full my-7 text-center">
 					<tbody className="py-5">
 						{props.options.map((data, index) => {
 							return (
-								<tr key={index}>
+								<tr key={index} className="">
 									<td>
 										<h1>{data.title}</h1>
 									</td>
