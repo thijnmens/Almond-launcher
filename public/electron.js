@@ -7,6 +7,7 @@ const fs = require('fs');
 const https = require('https');
 const download = require('image-downloader');
 const appDir = path.dirname(require.main.filename);
+const unzipper = require('unzipper');
 var exec = require('child_process').execFile;
 var GithubDownloader = require('download-github-release');
 var bodyParser = require('body-parser');
@@ -285,89 +286,203 @@ api.get('/steam/uninstall/:id', (req, res) => {
 	res.sendStatus(200);
 });
 
+api.get('/mods/exists/:id', (req, res) => {
+	if (Config.Mods.Supported[req.params.id]) {
+		if (app.isPackaged) {
+			if (
+				fs.existsSync(
+					path.join(
+						__dirname,
+						`../../../Mods/${Config.Mods.Supported[req.params.id].FileName}`
+					)
+				)
+			) {
+				res.sendStatus(200);
+			} else {
+				res.sendStatus(406);
+			}
+		} else {
+			if (
+				fs.existsSync(
+					path.join(
+						__dirname,
+						`../src/Mods/${Config.Mods.Supported[req.params.id].FileName}`
+					)
+				)
+			) {
+				res.sendStatus(200);
+			} else {
+				res.sendStatus(406);
+			}
+		}
+	} else {
+		res.sendStatus(406);
+	}
+});
+
 api.get('/mods/launch/:id', (req, res) => {
 	if (app.isPackaged) {
 		exec(
-			path.join(__dirname, `../../../Mods/${Config.Mods.Supported[req.params.id].FileName}`)
+			path.join(
+				__dirname,
+				'../../../Mods/',
+				Config.Mods.Supported[req.params.id].FilePath,
+				Config.Mods.Supported[req.params.id].FileName
+			)
 		);
 		res.sendStatus(200);
 	} else {
-		exec(path.join(__dirname, `../src/Mods/${Config.Mods.Supported[req.params.id].FileName}`));
+		exec(
+			path.join(
+				__dirname,
+				'../src/Mods/',
+				Config.Mods.Supported[req.params.id].FilePath,
+				Config.Mods.Supported[req.params.id].FileName
+			)
+		);
 		res.sendStatus(200);
 	}
 });
 
 api.get('/mods/download/:id', (req, res) => {
-	if (Config.Mods.Supported[req.params.id]) {
-		if (Config.Mods.Supported[req.params.id].Type === 'Github') {
-			if (app.isPackaged) {
-				GithubDownloader(
-					Config.Mods.Supported[req.params.id].User,
-					Config.Mods.Supported[req.params.id].Repo,
-					path.join(__dirname, `../../../Mods`),
-					filterRelease,
-					() => {
-						return true;
-					},
-					true
+	let downloaded = false;
+	if (app.isPackaged) {
+		if (
+			fs.existsSync(
+				path.join(
+					__dirname,
+					'../../../Mods/',
+					Config.Mods.Supported[req.params.id].FilePath,
+					Config.Mods.Supported[req.params.id].FileName
 				)
-					.then(() => {
-						res.sendStatus(200);
-					})
-					.catch((err) => {
-						console.error(err.message);
-						res.sendStatus(500);
-					});
-			} else {
-				GithubDownloader(
-					Config.Mods.Supported[req.params.id].User,
-					Config.Mods.Supported[req.params.id].Repo,
-					path.join(__dirname, `../src/Mods`),
-					filterRelease,
-					() => {
-						return true;
-					},
-					true
-				)
-					.then(() => {
-						res.sendStatus(200);
-					})
-					.catch((err) => {
-						console.error(err.message);
-						res.sendStatus(500);
-					});
-			}
-		} else {
-			https.get(Config.Mods.Supported[req.params.id].Download, (response) => {
-				if (app.isPackaged) {
-					const file = fs.createWriteStream(
-						path.join(
-							__dirname,
-							`../../../Mods/${Config.Mods.Supported[req.params.id].FileName}`
-						)
-					);
-					response.pipe(file);
-					file.on('finish', () => {
-						file.close();
-					});
-					res.sendStatus(200);
-				} else {
-					const file = fs.createWriteStream(
-						path.join(
-							__dirname,
-							`../src/Mods/${Config.Mods.Supported[req.params.id].FileName}`
-						)
-					);
-					response.pipe(file);
-					file.on('finish', () => {
-						file.close();
-					});
-					res.sendStatus(200);
-				}
-			});
+			)
+		) {
+			downloaded = true;
 		}
 	} else {
-		res.sendStatus(406);
+		if (
+			fs.existsSync(
+				path.join(
+					__dirname,
+					'../src/Mods/',
+					Config.Mods.Supported[req.params.id].FilePath,
+					Config.Mods.Supported[req.params.id].FileName
+				)
+			)
+		) {
+			downloaded = true;
+		}
+	}
+	if (!downloaded) {
+		if (Config.Mods.Supported[req.params.id]) {
+			if (Config.Mods.Supported[req.params.id].Type === 'Github') {
+				if (app.isPackaged) {
+					GithubDownloader(
+						Config.Mods.Supported[req.params.id].User,
+						Config.Mods.Supported[req.params.id].Repo,
+						path.join(__dirname, `../../../Mods`),
+						filterRelease,
+						() => {
+							return true;
+						},
+						true
+					)
+						.then(() => {
+							res.sendStatus(200);
+						})
+						.catch((err) => {
+							console.error(err.message);
+							res.sendStatus(500);
+						});
+				} else {
+					GithubDownloader(
+						Config.Mods.Supported[req.params.id].User,
+						Config.Mods.Supported[req.params.id].Repo,
+						path.join(__dirname, `../src/Mods`),
+						filterRelease,
+						() => {
+							return true;
+						},
+						true
+					)
+						.then(() => {
+							res.sendStatus(200);
+						})
+						.catch((err) => {
+							console.error(err.message);
+							res.sendStatus(500);
+						});
+				}
+			} else {
+				https.get(Config.Mods.Supported[req.params.id].Download, (response) => {
+					if (app.isPackaged) {
+						const file = fs.createWriteStream(
+							path.join(
+								__dirname,
+								`../../../Mods/${Config.Mods.Supported[req.params.id].FileName}`
+							)
+						);
+						response.pipe(file);
+						file.on('finish', () => {
+							file.close();
+							if (Config.Mods.Supported[req.params.id].FileType === 'zip') {
+								fs.createReadStream(
+									path.join(
+										__dirname,
+										`../../../Mods/${
+											Config.Mods.Supported[req.params.id].FileName
+										}`
+									)
+								).pipe(
+									unzipper.Extract({
+										path: path.join(
+											__dirname,
+											`../../../Mods/${
+												Config.Mods.Supported[req.params.id].ExtractPath
+											}`
+										),
+									})
+								);
+							}
+						});
+						res.sendStatus(200);
+					} else {
+						const file = fs.createWriteStream(
+							path.join(
+								__dirname,
+								`../src/Mods/${Config.Mods.Supported[req.params.id].FileName}`
+							)
+						);
+						response.pipe(file);
+						file.on('finish', () => {
+							file.close();
+							if (Config.Mods.Supported[req.params.id].FileType === 'zip') {
+								fs.createReadStream(
+									path.join(
+										__dirname,
+										`../src/Mods/${
+											Config.Mods.Supported[req.params.id].FileName
+										}`
+									)
+								).pipe(
+									unzipper.Extract({
+										path: path.join(
+											__dirname,
+											`../src/Mods/${
+												Config.Mods.Supported[req.params.id].ExtractPath
+											}`
+										),
+									})
+								);
+							}
+						});
+						res.sendStatus(200);
+					}
+				});
+			}
+		} else {
+			res.sendStatus(406);
+		}
 	}
 });
 

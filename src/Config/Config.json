@@ -1,7 +1,7 @@
 {
 	"General": {
 		"IsPackaged": false,
-		"Root": "",
+		"Root": "D:\\Projects\\almond-launcher\\src\\",
 		"Title": "Almond Launcher",
 		"Width": 1920,
 		"Height": 1080,
@@ -14,25 +14,34 @@
 		"_Link 1": "https://www.youtube.com/watch?v=gQuelApsq7k",
 		"_Link 2": "https://steamcommunity.com/dev/apikey",
 		"_2": "///////////////////////////////////////////////////////////////",
-		"SteamID": "XXXXXXXXXXXXXXXXX",
-		"SteamKey": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		"SteamID": "76561198446051555",
+		"SteamKey": "A9BE8D7D551A2570041944C401C22FBC"
 	},
 	"Epic Games": {},
 	"Mods": {
 		"Supported": {
+			"588030": {
+				"Type": "Nexus",
+				"FileType": "zip",
+				"FileName": "UnityModManager.exe",
+				"FilePath": "UnityModManager/",
+				"ExtractPath": "/",
+				"Download": "https://raw.githubusercontent.com/thijnmens/Almond-Mod-Managers/main/UnityModManager.zip",
+				"CompatiblePlatforms": ["Windows"],
+				"ModSite": "https://www.nexusmods.com/site/mods/21",
+				"SourceSite": "https://github.com/newman55/unity-mod-manager"
+			},
 			"620980": {
 				"Type": "Github",
+				"FileType": "exe",
 				"FileName": "ModAssistant.exe",
+				"FilePath": "/",
 				"User": "Assistant",
 				"Repo": "ModAssistant",
 				"Prerelease": false,
-				"CompatiblePlatforms": ["Windows"]
-			},
-			"not620980": {
-				"Type": "NotGithub",
-				"FileName": "ModAssistant.exe",
-				"Download": "https://github.com/Assistant/ModAssistant/releases/download/v1.1.26/ModAssistant.exe",
-				"CompatiblePlatforms": ["Windows"]
+				"CompatiblePlatforms": ["Windows"],
+				"ModSite": "https://beatmods.com/",
+				"SourceSite": "https://github.com/Assistant/ModAssistant"
 			}
 		}
 	},

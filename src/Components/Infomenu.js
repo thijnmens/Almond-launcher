@@ -16,6 +16,11 @@ function getIndex(arr, appid, width) {
 }
 
 const Infomenu = (props) => {
+	const [modStatus, setModStatus] = useState({
+		title: 'Loading...',
+		clicked: () => {},
+		verified: false,
+	});
 	const [showModsMenu, setShowModsMenu] = useState(false);
 	const [showSettingsMenu, setShowSettingsMenu] = useState(false);
 	const [achievements, setAchievements] = useState({ called: false, calls: 0, data: {} });
@@ -92,12 +97,27 @@ const Infomenu = (props) => {
 			}
 		};
 
-		const LaunchManager = () => {
+		const launchManager = () => {
 			fetch(`http://localhost:666/mods/launch/${props.appid}`, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
 				},
+			});
+		};
+
+		const downloadManager = () => {
+			fetch(`http://localhost:666/mods/download/${props.appid}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}).then(() => {
+				setModStatus({
+					title: 'Launch',
+					clicked: launchManager,
+					verified: false,
+				});
 			});
 		};
 
@@ -120,6 +140,29 @@ const Infomenu = (props) => {
 		};
 
 		const ModsMenuJSX = () => {
+			console.log(modStatus.verified);
+			if (!modStatus.verified) {
+				fetch(`http://localhost:666/mods/exists/${props.appid}`, {
+					method: 'GET',
+					headers: { 'Content-Type': 'application/json' },
+				})
+					.then((res) => {
+						if (res.ok) {
+							setModStatus({
+								title: 'Launch',
+								clicked: launchManager,
+								verified: true,
+							});
+						} else {
+							setModStatus({
+								title: 'Download',
+								clicked: downloadManager,
+								verified: true,
+							});
+						}
+					})
+					.catch();
+			}
 			if (showModsMenu) {
 				return (
 					<Portal>
@@ -134,7 +177,9 @@ const Infomenu = (props) => {
 								{
 									title: 'Open mod manager',
 									type: 'button',
-									options: [{ title: 'Launch', clicked: LaunchManager }],
+									options: [
+										{ title: modStatus.title, clicked: modStatus.clicked },
+									],
 								},
 							]}
 						/>

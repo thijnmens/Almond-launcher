@@ -3,9 +3,9 @@ function renderSwitch(data) {
 		case 'select':
 			return (
 				<select className="bg-gray-900 hover:bg-gray-700">
-					{data.options.map((data2) => {
+					{data.options.map((data2, index) => {
 						return (
-							<option className="hover:bg-gray-700" value={data2.value}>
+							<option key={index} className="hover:bg-gray-700" value={data2.value}>
 								{data2.title}
 							</option>
 						);
@@ -15,9 +15,10 @@ function renderSwitch(data) {
 		case 'input':
 			return (
 				<div>
-					{data.options.map((data2) => {
+					{data.options.map((data2, index) => {
 						return (
 							<input
+								key={index}
 								placeholder={data2.placeholder}
 								className="bg-gray-900 hover:bg-gray-700"
 							/>
@@ -30,9 +31,10 @@ function renderSwitch(data) {
 		case 'button':
 			return (
 				<div>
-					{data.options.map((data2) => {
+					{data.options.map((data2, index) => {
 						return (
 							<button
+								key={index}
 								className="bg-gray-900 px-5 rounded-sm border-none text-gray-200 font-bold hover:bg-gray-700"
 								onClick={() => {
 									data2.clicked();

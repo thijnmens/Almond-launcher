@@ -20,6 +20,7 @@
 .env.production.local
 
 # Logs
+Log.txt
 logs
 *.log
 npm-debug.log*
