@@ -1,7 +1,9 @@
 {
 	"name": "almond_launcher",
-	"author": "Thijn Smulders",
-	"version": "0.1.0",
+	"author": "Thijn Smulders <thijnsmulders04@gmail.com> (https://almond-launcher-site-au8i0l4lo-luidwigi.vercel.app/)",
+	"url": "https://github.com/thijnmens/Almond-launcher/issues",
+	"license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License",
+	"version": "0.2.0",
 	"private": true,
 	"main": "public/electron.js",
 	"homepage": "./",
@@ -135,6 +137,13 @@
 			{
 				"from": "src/Assets",
 				"to": "Assets",
+				"filter": [
+					"**/*"
+				]
+			},
+			{
+				"from": "src/Config",
+				"to": "Config",
 				"filter": [
 					"**/*"
 				]
